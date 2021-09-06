@@ -9,7 +9,7 @@ Before SqlQueryTools start generating the code behind file it validates the cont
 
 When the query in the sql file returns a result set the code behind file will also contain a dto class.
 
-The generated cde can be used to execute the query with an ORM like [Dapper]
+The generated code can be used to execute the query with an ORM like [Dapper]
 
 
 
