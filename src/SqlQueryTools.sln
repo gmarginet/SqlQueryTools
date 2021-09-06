@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlQueryTools", "SqlQueryTools\SqlQueryTools.csproj", "{ACB79A18-4841-48F1-88FB-96F39C013250}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACB79A18-4841-48F1-88FB-96F39C013250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB79A18-4841-48F1-88FB-96F39C013250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB79A18-4841-48F1-88FB-96F39C013250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB79A18-4841-48F1-88FB-96F39C013250}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19C82FF4-C8E7-44AC-B555-506F783774C2}
+	EndGlobalSection
+EndGlobal

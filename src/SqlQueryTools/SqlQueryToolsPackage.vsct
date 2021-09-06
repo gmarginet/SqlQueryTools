@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+
+  <Commands package="guidSqlQueryToolsPackage">
+    <Groups>
+      <Group guid="guidSqlQueryToolsPackageCmdSet" id="SqlFileMenuGroup" priority="0x1000">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <!--<Group guid="guidSqlQueryToolsPackageCmdSet" id="AddFileMenuGroup" priority="0x1000">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD_ITEMS"/>
+      </Group>-->
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidSqlQueryToolsPackageCmdSet" id="CustomToolCommandId" priority="0x1000" type="Button">
+        <Parent guid="guidSqlQueryToolsPackageCmdSet" id="SqlFileMenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Activate SqlStringGenerator</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidSqlQueryToolsPackageCmdSet" id="AddSqlFileCommandId" priority="0x1000" type="Button">
+        <!--<Parent guid="guidSqlQueryToolsPackageCmdSet" id="AddFileMenuGroup" />-->
+        <Strings>
+          <ButtonText>Sql String Generator File</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+  
+  <CommandPlacements>
+    <CommandPlacement guid="guidSqlQueryToolsPackageCmdSet" id="AddSqlFileCommandId" priority="0x1000">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD_ITEMS" />
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidSqlQueryToolsPackageCmdSet" id="CustomToolCommandId" context="guidSqlUIRule" />
+  </VisibilityConstraints>
+
+  <Symbols>
+    <GuidSymbol name="guidSqlQueryToolsPackage" value="{113648a2-43ee-4c43-8914-6d9009fe90a8}" />
+    <GuidSymbol name="guidSqlUIRule" value="{e5ac5a07-0c1e-426d-871b-c91db5f0ffb0}" />
+    <GuidSymbol name="guidSqlQueryToolsOutputPane" value="{47fd095c-4675-488c-87c0-495fddc87d7d}" />
+
+    <GuidSymbol name="guidSqlQueryToolsPackageCmdSet" value="{8b06ca30-6835-4c11-bb15-4ad5d6ece351}">
+      <IDSymbol name="SqlFileMenuGroup" value="0x1020" />
+      <!--<IDSymbol name="AddFileMenuGroup" value="0x1030" />-->
+      <IDSymbol name="CustomToolCommandId" value="0x0100" />
+      <IDSymbol name="AddSqlFileCommandId" value="0x0200" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
