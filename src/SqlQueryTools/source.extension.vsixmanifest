@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="SqlQueryTools.b7c5f795-d6bb-47d8-a0ef-4c472998f0f4" Version="1.0" Language="en-US" Publisher="CHB" />
+        <Identity Id="SqlQueryTools.b7c5f795-d6bb-47d8-a0ef-4c472998f0f4" Version="1.0" Language="en-US" Publisher="Gert Marginet" />
         <DisplayName>SqlQueryTools</DisplayName>
         <Description xml:space="preserve">Generate class with string based on Sql file content.</Description>
+        <MoreInfo>http://github.com/gmarginet/SqlQueryTools</MoreInfo>
+        <License>License.txt</License>
         <Preview>true</Preview>
     </Metadata>
     <Installation>
