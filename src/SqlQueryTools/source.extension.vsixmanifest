@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="SqlQueryTools.ffaffb7a-1447-4571-89f3-8209865a3f8e" Version="1.0" Language="en-US" Publisher="Gert Marginet" />
+        <DisplayName>SqlQueryTools</DisplayName>
+        <Description xml:space="preserve">Generate class with string based on Sql file content.</Description>
+        <MoreInfo>http://github.com/gmarginet/SqlQueryTools</MoreInfo>
+        <License>License.txt</License>
+        <Icon>Resources\icons8-database-administrator-96.png</Icon>
+        <PreviewImage>Resources\icons8-database-administrator-96.png</PreviewImage>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    </Assets>
+</PackageManifest>

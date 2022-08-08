@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="SqlQueryTools">
+    <Groups>
+      <Group guid="SqlQueryTools" id="SqlQueryToolsMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="SqlQueryTools" id="SqlQueryToolsCommandGroup" priority="0x0600">
+        <Parent guid="SqlQueryTools" id="SqlQueryToolsMenu"/>
+      </Group>
+    </Groups>
+
+    <Menus>
+      <Menu guid="SqlQueryTools" id="SqlQueryToolsMenu" priority="0x0100" type="Menu">
+        <Parent guid="SqlQueryTools" id="SqlQueryToolsMenuGroup"/>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Sql Query Tools</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Buttons>
+      <Button guid="SqlQueryTools" id="AddSqlFileCommand" priority="0x0200" type="Button">
+        <Parent guid="SqlQueryTools" id="SqlQueryToolsCommandGroup" />
+        <Icon guid="Icons" id="Logo" />
+        <Strings>
+          <ButtonText>Add Sql File</ButtonText>
+          <LocCanonicalName>.SqlQueryTools.AddSqlFileCommand</LocCanonicalName>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="Icons" href="Resources\icons8-database-administrator-16.png" usedList="Logo"/>
+    </Bitmaps>
+  </Commands>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="SqlQueryTools" id="SqlQueryToolsMenu" context="SqlQueryToolsMenuVisibilityConstraint"/>
+  </VisibilityConstraints>
+
+  <Symbols>
+    <GuidSymbol name="SqlQueryTools" value="{f3e8e45e-eff6-4b28-85e0-e6f5f9fa0d9f}">
+      <IDSymbol name="SqlQueryToolsMenuGroup" value="0x0001" />
+      <IDSymbol name="SqlQueryToolsMenu" value="0x0002"/>
+      <IDSymbol name="SqlQueryToolsCommandGroup" value="0x0003" />
+      <IDSymbol name="AddSqlFileCommand" value="0x0100" />
+    </GuidSymbol>
+    <GuidSymbol name="SqlQueryToolsMenuVisibilityConstraint" value="{8f1fbdc1-de05-4ec8-be04-39d6c46dfdbd}"/>
+    <GuidSymbol name="Icons" value="{f8cb65dd-6eae-4a35-a364-f5bb8bd1cea4}" >
+      <IDSymbol name="Logo" value="1"/>
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
