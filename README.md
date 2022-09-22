@@ -11,7 +11,9 @@ The generated code can be used to execute the query with an ORM like [Dapper](ht
 
 ### Download
 
-Download from [releases](https://github.com/gmarginet/SqlQueryTools/releases)
+Download from [releases](https://github.com/gmarginet/SqlQueryTools/releases).
+
+Or install it from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=GertMarginet.SqlQueryTools).
 
 ### Getting started
 
