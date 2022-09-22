@@ -18,20 +18,20 @@ Download from [releases](https://github.com/gmarginet/SqlQueryTools/releases)
 You can add a new sql file by right clicking on a .cs file and select 'Sql Query Tools/Add Sql File'.
 This will add a nested sql file below the selected csharp file.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/AddSqlFile.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/AddSqlFile.png?raw=true)
 
 The following dialog will pop up, enter the filename and click 'Add file'.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/AddNewSqlFileDialog.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/AddNewSqlFileDialog.png?raw=true)
 
 The added sql file will have the following content.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/SqlFileDefaultContent.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/SqlFileDefaultContent.png?raw=true)
 
 Before you start writing your query you should set the SQL server connection string that Sql Query Tools should use to validate the query.
 The connection string can be set in the .csproj file you just added the sql file to.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ConnectionString.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ConnectionString.png?raw=true)
 
 Now you can start writing your sql query.
 You can remove all comments but if you use parameters in your query you should put the parameter declarations above the 'End Of Parameter Declaration' marker.
@@ -42,26 +42,26 @@ All comments that you keep in your sql file will not be put in the const string.
 
 Below you can find an example of a query.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleSql.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleSql.png?raw=true)
 
 When you save the sql file, Sql Query Tools will start generating the code behind.
 The progress can be found in the Sql Query Tools output panel.
 Here you will also find more info when something went wrong.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/OutputPanel.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/OutputPanel.png?raw=true)
 
 And the generated code for the example query from above will look like this.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleCode.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleCode.png?raw=true)
 
 The solution explorer will now look like this.
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/SolutionExplorer.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/SolutionExplorer.png?raw=true)
 
 If you don't like the file suffixes or the parameter declaration marker.
 These can be changed via 'Tools/Options/SqlQueryTools
 
-![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/Options.png)
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/Options.png?raw=true)
 
 ### License
 
