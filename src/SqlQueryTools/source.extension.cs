@@ -7,11 +7,11 @@ namespace SqlQueryTools
 {
     internal sealed partial class Vsix
     {
-        public const string Id = "SqlQueryTools.ffaffb7a-1447-4571-89f3-8209865a3f8e";
+        public const string Id = "SqlQueryTools.46119220-B112-4974-BF62-BA76F5548B13";
         public const string Name = "SqlQueryTools";
         public const string Description = @"Generate class with string based on Sql file content.";
         public const string Language = "en-US";
-        public const string Version = "1.0";
+        public const string Version = "1.1";
         public const string Author = "Gert Marginet";
         public const string Tags = "";
     }
