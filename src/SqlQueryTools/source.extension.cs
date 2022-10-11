@@ -11,7 +11,7 @@ namespace SqlQueryTools
         public const string Name = "SqlQueryTools";
         public const string Description = @"Generate class with string based on Sql file content.";
         public const string Language = "en-US";
-        public const string Version = "1.1";
+        public const string Version = "1.2";
         public const string Author = "Gert Marginet";
         public const string Tags = "";
     }
