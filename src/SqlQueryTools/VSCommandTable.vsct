@@ -20,6 +20,7 @@
       <Menu guid="SqlQueryTools" id="SqlQueryToolsMenu" priority="0x0100" type="Menu">
         <Parent guid="SqlQueryTools" id="SqlQueryToolsMenuGroup"/>
         <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Sql Query Tools</ButtonText>
         </Strings>

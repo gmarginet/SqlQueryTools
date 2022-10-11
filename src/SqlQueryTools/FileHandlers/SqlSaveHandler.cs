@@ -86,7 +86,8 @@ namespace SqlQueryTools.FileHandlers
 
             var hasDeclarationSection = sqlParserTokens.Any(x => x.TokenType == TSqlTokenType.SingleLineComment && x.Text == options.EndOfParameterDeclarationMarker);
             var endOfParameterDeclarationMarkerFound = false;
-            var parameterNames = new List<string>();
+            var declaredParameters = new Dictionary<string,string>();
+            var foundParameterDeclaration = String.Empty;
             var sqlCodeBuilder = new StringBuilder();
             var whiteSpaceBuffer = new StringBuilder();
             foreach (var token in sqlParserTokens)
@@ -101,8 +102,15 @@ namespace SqlQueryTools.FileHandlers
 
                     if (token.TokenType == TSqlTokenType.Variable)
                     {
-                        parameterNames.Add(token.Text);
+                        foundParameterDeclaration = token.Text;
+                        declaredParameters.Add(foundParameterDeclaration, string.Empty);
                         continue;
+                    }
+
+                    if (token.TokenType == TSqlTokenType.Identifier && !string.IsNullOrEmpty(foundParameterDeclaration))
+                    {
+                        declaredParameters[foundParameterDeclaration] = token.Text;
+                        foundParameterDeclaration = string.Empty;
                     }
                 }
                 else
@@ -131,6 +139,15 @@ namespace SqlQueryTools.FileHandlers
                         continue;
                     }
 
+                    if (token.TokenType == TSqlTokenType.Variable)
+                    {
+                        if (!declaredParameters.ContainsKey(token.Text))
+                        {
+                            await outputPane.WriteLineAsync($"\tVariable {token.Text} is used in the query, but it is not defined in the 'Parameter Declarat");
+                            return;
+                        }
+                    }
+
                     if (whiteSpaceBuffer.Length > 0)
                     {
                         sqlCodeBuilder.Append(whiteSpaceBuffer.ToString());
@@ -155,7 +172,13 @@ namespace SqlQueryTools.FileHandlers
                     await conn.OpenAsync();
                     try
                     {
-                        conn.Query($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}'; EXEC sp_describe_first_result_set @sql;");
+                        //conn.Query($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}'; EXEC sp_describe_first_result_set @sql;");
+                        //conn.Query($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}'; DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", declaredParameters.Select(x => $"{x.Key} {x.Value}"))}';  EXEC sp_describe_first_result_set @sql, @params;").ToList();
+                        var queryBuilder = new StringBuilder();
+                        queryBuilder.AppendLine($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}';");
+                        queryBuilder.AppendLine($"DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", declaredParameters.Select(x => $"{x.Key} {x.Value}"))}';");
+                        queryBuilder.AppendLine("EXEC sp_describe_first_result_set @sql, @params;");
+                        conn.Query(queryBuilder.ToString()).ToList();
                     }
                     catch (SqlException ex)
                     {
@@ -211,7 +234,7 @@ namespace SqlQueryTools.FileHandlers
             contentBuilder.AppendLine($"\t{{");
             contentBuilder.AppendLine($"\t\tpublic const string Query = @\"{sqlCode}\";");
 
-            foreach (var name in parameterNames)
+            foreach (var name in declaredParameters.Keys)
             {
                 contentBuilder.AppendLine();
                 contentBuilder.AppendLine($"\t\tpublic const string {name} = @\"{name}\";");
