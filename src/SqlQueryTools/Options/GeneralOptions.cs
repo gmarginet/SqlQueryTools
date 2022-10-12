@@ -23,6 +23,12 @@ namespace SqlQueryTools.Options
         public string ClassSuffix { get; set; } = "Sql";
 
         [Category("Code generator")]
+        [DisplayName("Sql String Field Name")]
+        [Description("This name will be used for the const field in the class SqlQueryTools will generate for the sql string.")]
+        [DefaultValue("Query")]
+        public string SqlStringFieldName { get; set; } = "Query";
+
+        [Category("Code generator")]
         [DisplayName("Code file suffix")]
         [Description("This suffix will be added to the filename when SqlQueryTools generates a code file.")]
         [DefaultValue(".sqt.cs")]
