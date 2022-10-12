@@ -232,7 +232,7 @@ namespace SqlQueryTools.FileHandlers
             contentBuilder.AppendLine($"{{");
             contentBuilder.AppendLine($"\tpublic static class {className}");
             contentBuilder.AppendLine($"\t{{");
-            contentBuilder.AppendLine($"\t\tpublic const string Query = @\"{sqlCode}\";");
+            contentBuilder.AppendLine($"\t\tpublic const string {options.SqlStringFieldName} = @\"{sqlCode}\";");
 
             foreach (var name in declaredParameters.Keys)
             {
