@@ -6,7 +6,7 @@ $version = $content.PackageManifest.Metadata.Identity.Version
 Write-Host "Vsix version = $version"
 
 $BuildInfoJson = @{
-	VsixVersion : "$version"
+	VsixVersion = $version
 }
 $BuildInfoJson | ConvertTo-Json | Out-File "$PSScriptRoot\BuildInfo.json"
 
