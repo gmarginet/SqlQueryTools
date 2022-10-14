@@ -50,12 +50,18 @@
       <DependentUpon>FileNameDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\VsTheme.cs" />
+    <Compile Include="Dtos\SpDescribeFirstResultSetResult.cs" />
     <Compile Include="Extensions\ProjectExtensions.cs" />
     <Compile Include="FileHandlers\SqlSaveHandler.cs" />
+    <Compile Include="Helpers\SqlTypeHelper.cs" />
     <Compile Include="Options\DialogPageProvider.cs" />
     <Compile Include="Options\GeneralOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\AddSqlFileCommand.cs" />
+    <Compile Include="PropertyExtenders\CustomUiTypeEditor.cs" />
+    <Compile Include="PropertyExtenders\IMyDynamicExtender.cs" />
+    <Compile Include="PropertyExtenders\MyExtenderProvider.cs" />
+    <Compile Include="PropertyExtenders\NewPropertyExtender.cs" />
     <Compile Include="SqlQueryToolsPackage.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>
