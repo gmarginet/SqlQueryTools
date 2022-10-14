@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json.schemastore.org/vsix-publish",
+    "categories": [ "Coding", "Data" ],
+    "identity": {
+        "internalName": "SqlQueryTools",
+        "tags": [ "Micro ORM", "Query string", "SQL server" ]
+    },
+    "overview": "../README.md",
+    "priceCategory": "free",
+    "publisher": "Gert marginet",
+    "private": false,
+    "qna": true,
+    "repo": "https://github.com/gmarginet/SqlQueryTools"
+}
