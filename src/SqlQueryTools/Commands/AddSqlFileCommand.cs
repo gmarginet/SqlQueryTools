@@ -10,11 +10,15 @@ namespace SqlQueryTools
     [Command(PackageIds.AddSqlFileCommand)]
     internal sealed class AddSqlFileCommand : BaseCommand<AddSqlFileCommand>
     {
+        internal const string GenerateParameterNamesAttributeName = "GenerateParameterNames";
+        internal const string GeneratePocoClassAttributeName = "GeneratePocoClass";
+
         public OutputWindowPane OutputPane => ((SqlQueryToolsPackage)Package).OutputPane;
 
         protected override Task InitializeCompletedAsync()
         {
             Command.Supported = false;
+            
             return base.InitializeCompletedAsync();
         }
 
@@ -72,6 +76,15 @@ namespace SqlQueryTools
             File.WriteAllText(newFileFullName, contentBuilder.ToString());
 
             await project.AddNestedFileAsync(newFileFullName, selectedPhisicalFile);
+
+            var newPhisicalFile = project.GetPhysicalFile(newFileFullName);
+            if (newPhisicalFile != null)
+            {
+                await newPhisicalFile.TrySetAttributeAsync(GenerateParameterNamesAttributeName, options.GenerateParameterNames);
+                await newPhisicalFile.TrySetAttributeAsync(GeneratePocoClassAttributeName, options.GeneratePocoClass);
+                await newPhisicalFile.TrySetAttributeAsync("New Property", "test from code");
+                await project.SaveAsync();
+            }
 
             await VS.Documents.OpenAsync(newFileFullName);
 

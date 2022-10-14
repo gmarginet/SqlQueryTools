@@ -3,7 +3,9 @@ using Microsoft.SqlServer.TransactSql.ScriptDom;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using SqlQueryTools.Dto;
 using SqlQueryTools.Extensions;
+using SqlQueryTools.Helpers;
 using SqlQueryTools.Options;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -165,6 +167,7 @@ namespace SqlQueryTools.FileHandlers
                 return;
             }
 
+            List<SpDescribeFirstResultSetResult> queryMetaData;
             try
             {
                 using (var conn = new SqlConnection(connectionString))
@@ -172,13 +175,11 @@ namespace SqlQueryTools.FileHandlers
                     await conn.OpenAsync();
                     try
                     {
-                        //conn.Query($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}'; EXEC sp_describe_first_result_set @sql;");
-                        //conn.Query($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}'; DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", declaredParameters.Select(x => $"{x.Key} {x.Value}"))}';  EXEC sp_describe_first_result_set @sql, @params;").ToList();
                         var queryBuilder = new StringBuilder();
                         queryBuilder.AppendLine($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}';");
                         queryBuilder.AppendLine($"DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", declaredParameters.Select(x => $"{x.Key} {x.Value}"))}';");
                         queryBuilder.AppendLine("EXEC sp_describe_first_result_set @sql, @params;");
-                        conn.Query(queryBuilder.ToString()).ToList();
+                        queryMetaData = conn.Query<SpDescribeFirstResultSetResult>(queryBuilder.ToString()).ToList();
                     }
                     catch (SqlException ex)
                     {
@@ -234,14 +235,38 @@ namespace SqlQueryTools.FileHandlers
             contentBuilder.AppendLine($"\t{{");
             contentBuilder.AppendLine($"\t\tpublic const string {options.SqlStringFieldName} = @\"{sqlCode}\";");
 
-            foreach (var name in declaredParameters.Keys)
+            var generateParameterNames = await inputPhysicalFile.GetAttributeAsync(AddSqlFileCommand.GenerateParameterNamesAttributeName);
+            var generatePocoClass = await inputPhysicalFile.GetAttributeAsync(AddSqlFileCommand.GeneratePocoClassAttributeName);
+
+            if (true)
             {
-                contentBuilder.AppendLine();
-                contentBuilder.AppendLine($"\t\tpublic const string {name} = @\"{name}\";");
+                foreach (var name in declaredParameters.Keys)
+                {
+                    contentBuilder.AppendLine();
+                    contentBuilder.AppendLine($"\t\tpublic const string {name} = @\"{name}\";");
+                }
+
             }
 
             contentBuilder.AppendLine($"\t}}");
             contentBuilder.AppendLine($"}}");
+
+            if (false)
+            {
+                contentBuilder.AppendLine();
+                contentBuilder.AppendLine($"\tpublic class {className}Dto");
+                contentBuilder.AppendLine($"\t{{");
+
+                foreach (var columnInfo in queryMetaData)
+                {
+                    var columnName = columnInfo.name;
+                    var columnType = SqlTypeHelper.ToCSharpTypeName(columnInfo.system_type_name);
+
+                    contentBuilder.AppendLine($"\t\tpublic {columnType} {columnName} {{ get; set; }}");
+                }
+
+                contentBuilder.AppendLine($"\t}}");
+            }
 
             var newFileName = $"{inputFileNameWithoutSuffix}{options.CodeFileSuffix}";
             var newFilePath = Path.Combine(inputFileDirectory, newFileName);
