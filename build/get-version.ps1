@@ -5,12 +5,9 @@ Write-Host $FullPath
 $version = $content.PackageManifest.Metadata.Identity.Version
 Write-Host "Vsix version = $version"
 
-$BuildInfoJson = @"
-{
-	"VsixVersion" : $version
+$BuildInfoJson = @{
+	VsixVersion : "$version"
 }
-"@
-
-$BuildInfoJson | ConvertTo-Json -depth 100 | Out-File "$PSScriptRoot\BuildInfo.json"
+$BuildInfoJson | ConvertTo-Json | Out-File "$PSScriptRoot\BuildInfo.json"
 
 Write-Host "##vso[task.setvariable variable=VsixVersion;]$version"
