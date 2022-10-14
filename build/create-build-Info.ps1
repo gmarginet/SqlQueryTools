@@ -1,13 +1,6 @@
-$FullPath = Resolve-Path $PSScriptRoot\..\src\SqlQueryTools\source.extension.vsixmanifest
+$FullPath = Resolve-Path $PSScriptRoot\BuildInfo.json
 Write-Host $FullPath
 
-[xml]$content = Get-Content $FullPath
-$version = $content.PackageManifest.Metadata.Identity.Version
-Write-Host "Vsix version = $version"
+$BuildInfo = Get-Content "$FullPath" | ConvertFrom-Json
 
-$BuildInfoJson = @{
-	VsixVersion = $version
-}
-$BuildInfoJson | ConvertTo-Json | Out-File "$PSScriptRoot\BuildInfo.json"
-
-Write-Host "##vso[task.setvariable variable=VsixVersion;]$version"
+Write-Host "Vsix Version = $($BuildInfo.VsixVersion)"
