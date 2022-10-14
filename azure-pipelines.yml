@@ -16,9 +16,9 @@ variables:
 
 steps:
 - task: PowerShell@2
-  displayName: Get VisixVersion from the vsix manifest
+  displayName: Create BuildInfo.json
   inputs:
-    filePath: 'build\get-version.ps1'
+    filePath: 'build\create-build-Info.ps1'
     pwsh: true
 - task: NuGetToolInstaller@1
   inputs:
