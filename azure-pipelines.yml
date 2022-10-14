@@ -28,3 +28,15 @@ steps:
     maximumCpuCount: true
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: |
+      README.md
+      build/**
+      **/*.vsix
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'drop'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
