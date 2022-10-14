@@ -15,6 +15,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: PowerShell@2
+  displayName: Get VisixVersion from the vsix manifest
+  inputs:
+    filePath: 'build\get-version.ps1'
+    pwsh: true
 - task: NuGetToolInstaller@1
   inputs:
     versionSpec: '4.7.1'
