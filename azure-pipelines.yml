@@ -18,7 +18,7 @@ steps:
 - task: PowerShell@2
   displayName: Create BuildInfo.json
   inputs:
-    filePath: 'build\create-build-Info.ps1'
+    filePath: 'build\create-build-info.ps1'
     pwsh: true
 - task: NuGetToolInstaller@1
   inputs:
