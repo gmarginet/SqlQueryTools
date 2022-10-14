@@ -9,7 +9,7 @@ $BuildInfoJson = @"
 {
 	"VsixVersion" : $version
 }
-@
+"@
 
 $BuildInfoJson | ConvertTo-Json -depth 100 | Out-File "$PSScriptRoot\BuildInfo.json"
 
