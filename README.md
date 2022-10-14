@@ -1,4 +1,5 @@
 # SqlQueryTools
+[![Build Status](https://marginet.visualstudio.com/SqlQueryTools/_apis/build/status/SqlQueryTools-CI?branchName=master)](https://marginet.visualstudio.com/SqlQueryTools/_build/latest?definitionId=16&branchName=master)
 
 SqlQueryTools is a visual studio extension that generates code behind files for sql files.
 The code behinde file contains a static class with the same name as the sql file.
