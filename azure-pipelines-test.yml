@@ -8,20 +8,26 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  vsixVersion: 'unknown'
 
 jobs:
 - job: Build
   steps:
   - powershell: |
       $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
-      Write-Host "Vsix manifest path = $vsixManifestPath"
-      Write-Host "##vso[task.setvariable variable=MyPsVar;]PsVarValueStep1"
+      Write-Host "vsixManifestPath = $vsixManifestPath"
+      [xml]$vsixManifestContent = Get-Content $vsixManifestPath
+      $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
+      Write-Host "vsixVersion = $vsixVersion"
+      Write-Host "##vso[task.setvariable variable=MyVsixVersion;]vsixVersion"
+      Write-Host "##vso[task.setvariable variable=vsixVersion;]vsixVersion"
     displayName: 'Test Set variable'
   - powershell: |
-      Write-Host "My ps var = $(MyPsVar)"
+      Write-Host "myVsixVersion = $(MyVsixVersion)"
+      Write-Host "vsixVersion =$(vsixVersion)"
     displayName: 'Test Get variable'
 - job: Deploy
   steps:
   - powershell: |
-      Write-Host "My ps var = $(MyPsVar)"
+      Write-Host "My ps var = $(vsixVersion)"
     displayName: 'Test Get variable'
