@@ -19,12 +19,12 @@ jobs:
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "vsixVersion = $vsixVersion"
-      Write-Host "##vso[task.setvariable variable=MyVsixVersion;]vsixVersion"
-      Write-Host "##vso[task.setvariable variable=vsixVersion;]vsixVersion"
+      Write-Host "##vso[task.setvariable variable=MyVsixVersion;]$vsixVersion"
+      Write-Host "##vso[task.setvariable variable=vsixVersion;]$vsixVersion"
     displayName: 'Test Set variable'
   - powershell: |
       Write-Host "myVsixVersion = $(MyVsixVersion)"
-      Write-Host "vsixVersion =$(vsixVersion)"
+      Write-Host "vsixVersion = $(vsixVersion)"
     displayName: 'Test Get variable'
 - job: Deploy
   steps:
