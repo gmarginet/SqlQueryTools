@@ -4,11 +4,16 @@ trigger:
 pool:
   vmImage: 'windows-2022'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+- job: Build
+  steps:
+  - powershell: |
+      Write-Host 'test ps variables'
+      Write-Host $(Build.SourcesDirectory)
+      Write-Host $(solution)
+    displayName: 'Test PS variable'
