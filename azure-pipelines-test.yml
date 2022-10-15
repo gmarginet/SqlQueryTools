@@ -13,11 +13,13 @@ variables:
 jobs:
 - job: Build
   steps:
-  - powershell: |
+  - powershell: 
       $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
       Write-Host "vsixManifestPath = $vsixManifestPath"
+      
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
+      
       Write-Host "vsixVersion = $vsixVersion"
       Write-Host "##vso[task.setvariable variable=MyVsixVersion;]$vsixVersion"
       Write-Host "##vso[task.setvariable variable=vsixVersion;]$vsixVersion"
