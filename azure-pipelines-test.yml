@@ -20,3 +20,8 @@ jobs:
   - powershell: |
       Write-Host "My ps var = $(MyPsVar)"
     displayName: 'Test Get variable'
+- job: Deploy
+  steps:
+  - powershell: |
+      Write-Host "My ps var = $(MyPsVar)"
+    displayName: 'Test Get variable'
