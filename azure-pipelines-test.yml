@@ -8,28 +8,40 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  vsixVersion: 'unknown'
 
 jobs:
 - job: Build
   steps:
-  - powershell: 
+  - powershell: |
       $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
       Write-Host "vsixManifestPath = $vsixManifestPath"
-      
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
-      
       Write-Host "vsixVersion = $vsixVersion"
       Write-Host "##vso[task.setvariable variable=MyVsixVersion;]$vsixVersion"
-      Write-Host "##vso[task.setvariable variable=vsixVersion;]$vsixVersion"
-    displayName: 'Test Set variable'
+    displayName: 'Read vsix version from manifest file'
   - powershell: |
       Write-Host "myVsixVersion = $(MyVsixVersion)"
-      Write-Host "vsixVersion = $(vsixVersion)"
-    displayName: 'Test Get variable'
+      $buildInfo = @{
+        VsixVersion = $(MyVsixVersion)
+      }
+      $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
+    displayName: 'Create BuildInfo.json'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish artifact'
+    inputs:
+      artifactName: 'drop'
+      TargetPath: '$(Build.ArtifactStagingDirectory)'
 - job: Deploy
   steps:
+  - task: DownloadBuildArtifacts@1
+    displayName: 'Download artifact'
+    inputs:
+      artifactName: 'drop'
+      downloadPath: '$(System.ArtifactsDirectory)\drop'
   - powershell: |
-      Write-Host "My ps var = $(vsixVersion)"
-    displayName: 'Test Get variable'
+      $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
+      Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
+      $buildInfo = Get-Content $buildInfoJsonPath | ConvertFrom-Json
+      Write-Host "vsixVersion = $($buildInfo.VsixVersion)"
+    displayName: 'Read BuildInfo.json'
