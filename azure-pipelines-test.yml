@@ -38,7 +38,7 @@ jobs:
     displayName: 'Download artifact'
     inputs:
       artifactName: 'drop'
-      downloadPath: '$(System.ArtifactsDirectory)\drop'
+      downloadPath: '$(System.ArtifactsDirectory)'
   - powershell: |
       $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
       Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
