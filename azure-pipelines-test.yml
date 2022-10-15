@@ -18,6 +18,5 @@ jobs:
       Write-Host "##vso[task.setvariable variable=MyPsVar;]PsVarValueStep1"
     displayName: 'Test Set variable'
   - powershell: |
-      Write-Host "Vsix manifest path = $vsixManifestPath"
-      Write-Host "My ps var = $MyPsVar"
+      Write-Host "My ps var = $(MyPsVar)"
     displayName: 'Test Get variable'
