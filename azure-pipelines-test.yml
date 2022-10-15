@@ -13,7 +13,11 @@ jobs:
 - job: Build
   steps:
   - powershell: |
-      Write-Host 'test ps variables'
-      Write-Host $(Build.SourcesDirectory)
-      Write-Host $(solution)
-    displayName: 'Test PS variable'
+      $vsixManifestPath Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
+      Write-Host "Vsix manifest path = $vsixManifestPath"
+      Write-Host "##vso[task.setvariable variable=MyPsVar;]PsVarValueStep1"
+    displayName: 'Test Set variable'
+  - powershell: |
+      Write-Host "Vsix manifest path = $vsixManifestPath"
+      Write-Host "My ps var = $MyPsVar"
+    displayName: 'Test Get variable'
