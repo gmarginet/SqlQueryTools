@@ -32,7 +32,7 @@ jobs:
     inputs:
       artifactName: 'drop'
       TargetPath: '$(Build.ArtifactStagingDirectory)'
-- job: Check-Deplo-Needed
+- job: CheckDeployNeeded
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
@@ -50,7 +50,7 @@ jobs:
       cleanDestinationFolder: true
       overwriteExistingFiles: true
 - job: Deploy
-  dependsOn: Check-Deplo-Needed
+  dependsOn: CheckDeployNeeded
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
   - task: DownloadBuildArtifacts@1
