@@ -32,8 +32,25 @@ jobs:
     inputs:
       artifactName: 'drop'
       TargetPath: '$(Build.ArtifactStagingDirectory)'
-- job: Deploy
+- job: Check-Deplo-Needed
   dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  steps:
+  - task: DownloadGitHubRelease@0
+    inputs:
+      connection: 'github release connection'
+      userRepository: 'gmarginet/SqlQueryTools'
+      defaultVersionType: 'latest'
+      itemPattern: '**/*.vsix'
+      downloadPath: '$(System.ArtifactsDirectory)'
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
+      destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
+      cleanDestinationFolder: true
+      overwriteExistingFiles: true
+- job: Deploy
+  dependsOn: Check-Deplo-Needed
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
   - task: DownloadBuildArtifacts@1
