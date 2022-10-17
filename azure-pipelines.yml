@@ -132,3 +132,15 @@ jobs:
         $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
         Get-ChildItem $vsixPath
 
+  - task: GitHubRelease@1
+    displayName: 'Publish new release to GitHub'
+    inputs:
+      gitHubConnection: 'github release connection'
+      repositoryName: 'gmarginet/SqlQueryTools'
+      action: 'create'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'userSpecifiedTag'
+      tag: 'v$(currentVsixVersion)'
+      changeLogCompareToRelease: 'lastFullRelease'
+      changeLogType: 'issueBased'
+      changeLogLabels: 
