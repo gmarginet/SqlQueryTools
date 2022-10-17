@@ -113,4 +113,4 @@ jobs:
       script: |
         echo "Start Deploy"
         $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
-        Get-ChildItem
+        Get-ChildItem $vsixPath
