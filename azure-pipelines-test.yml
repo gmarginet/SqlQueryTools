@@ -22,14 +22,14 @@ jobs:
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "vsixVersion = $vsixVersion"
-      Write-Host "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
+      Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
     name: GetCurrentVersion
     displayName: 'Read current vsix version from manifest file'
 
   - powershell: |
-      Write-Host "VsixVersion = $(VsixVersion)"
+      Write-Host "VsixVersion = $(MyVsixVersion)"
       $buildInfo = @{
-        VsixVersion = $(VsixVersion)
+        VsixVersion = $(MyVsixVersion)
       }
       $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
     displayName: 'Create BuildInfo.json'
@@ -80,7 +80,7 @@ jobs:
   dependsOn:
   - Build
   - Check
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build.outputs['GetCurrentVersion.VsixVersion'], variables['MyPreviousVsixVersion']))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build.outputs['GetCurrentVersion.MyVsixVersion'], variables['MyPreviousVsixVersion']))
   steps:
   - task: DownloadBuildArtifacts@1
     displayName: 'Download artifact'
