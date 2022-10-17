@@ -9,22 +9,27 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
+
+
 jobs:
 - job: Build
+  displayName: 'Build latest commit'
   steps:
+
   - powershell: |
       $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
       Write-Host "vsixManifestPath = $vsixManifestPath"
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "vsixVersion = $vsixVersion"
-      Write-Host "##vso[task.setvariable variable=MyVsixVersion;]$vsixVersion"
-    displayName: 'Read vsix version from manifest file'
+      Write-Host "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
+    name: GetCurrentVersion
+    displayName: 'Read current vsix version from manifest file'
 
   - powershell: |
-      Write-Host "myVsixVersion = $(MyVsixVersion)"
+      Write-Host "VsixVersion = $(VsixVersion)"
       $buildInfo = @{
-        VsixVersion = $(MyVsixVersion)
+        VsixVersion = $(VsixVersion)
       }
       $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
     displayName: 'Create BuildInfo.json'
@@ -37,7 +42,7 @@ jobs:
 
 
 
-- job: CheckDeployNeeded
+- job: Check
   displayName: 'Check if the current build needs to be released'
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -72,8 +77,10 @@ jobs:
 
 
 - job: Deploy
-  dependsOn: CheckDeployNeeded
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['MyVsixVersion'], variables['MyPreviousVsixVersion']))
+  dependsOn:
+  - Build
+  - Check
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build.outputs['GetCurrentVersion.VsixVersion'], variables['MyPreviousVsixVersion']))
   steps:
   - task: DownloadBuildArtifacts@1
     displayName: 'Download artifact'
