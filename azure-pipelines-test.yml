@@ -40,12 +40,11 @@ jobs:
 
   - task: PowerShell@2
     displayName: 'test set var'
-    name: SetVersion
+    name: SetVersion1
     inputs:
       targetType: 'inline'
       script: |
         echo "##vso[task.setvariable variable=currentVsixVersion]testValue1.1"
-        echo "##vso[task.setvariable variable=previousVsixVersion]testValue1.2"
         echo "##vso[task.setvariable variable=previousVsixVersion;isOutput=true]testValue1.2"
 
   - task: PowerShell@2
@@ -55,11 +54,12 @@ jobs:
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
         echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Global previous vsix version = $(previousVsixVersion)"
-        echo "p vsix = $env:PREVIOUSVSIXVERSION"
+        echo "Global previous vsix version = $(SetVersion1.previousVsixVersion)"
+        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
+    name: SetVersion2
     inputs:
       targetType: 'inline'
       script: |
@@ -73,8 +73,9 @@ jobs:
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
         echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Global previous vsix version = $(previousVsixVersion)"
-        echo "p vsix = $env:PREVIOUSVSIXVERSION"
+        echo "Global previous vsix version = $(SetVersion1.previousVsixVersion)"
+        echo "Global previous vsix version = $(SetVersion2.previousVsixVersion)"
+        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
 
 #  - powershell: |
 #      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
@@ -119,7 +120,7 @@ jobs:
         echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global previous vsix version = $(previousVsixVersion)"
         echo "p vsix = $env:PREVIOUSVSIXVERSION"
-        echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion.previousVsixVersion'])"
+        echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'])"
 
 #  - task: DownloadGitHubRelease@0
 #    displayName: 'Download the latest release from GitHub'
