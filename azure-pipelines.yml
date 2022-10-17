@@ -1,14 +1,18 @@
 trigger:
 - '*'
+
 pool:
   vmImage: 'windows-2022'
+
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-
 jobs:
+#############################
+#    Build_SqlQueryTools    #
+#############################
 - job: Build_SqlQueryTools
   displayName: 'Build latest SqlQueryTools commit'
   steps:
@@ -63,8 +67,9 @@ jobs:
         echo "Found vsix version = $vsixVersion"
         echo "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
 
-
-
+############################################
+#    Get_Previous_SqlQueryTools_Release    #
+############################################
 - job: Get_Previous_SqlQueryTools_Release
   displayName: 'Get previous SqlQueryTools release'
   dependsOn:
@@ -103,8 +108,9 @@ jobs:
         echo "Found vsix version = $vsixVersion"
         echo "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
 
-
-
+##############################
+#    Deploy_SqlQueryTools    #
+##############################
 - job: Deploy_SqlQueryTools
   displayName: 'Deploy latest SqlQueryTools commit'
   dependsOn:
