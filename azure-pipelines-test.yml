@@ -29,9 +29,9 @@ jobs:
   steps:
 
   - powershell: |
-      #$vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
+      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
       #Write-Host "vsixManifestPath = $vsixManifestPath"
-      [xml]$vsixManifestContent = Get-Content Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
+      [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "Found vsix version = $vsixVersion"
       #Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
