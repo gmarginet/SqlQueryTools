@@ -136,15 +136,6 @@ jobs:
       artifactName: 'SqlQueryTools'
       targetPath: '$(Build.StagingDirectory)/Artifact'
 
-  - task: PowerShell@2
-    displayName: 'tmp'
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "Start Deploy of $(currentVsixVersion)"
-        $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
-        Get-ChildItem $vsixPath
-
   - task: GitHubRelease@1
     displayName: 'Publish new release to GitHub'
     inputs:
