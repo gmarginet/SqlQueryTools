@@ -161,6 +161,8 @@ jobs:
 
   - task: PowerShell@2
     displayName: 'Publish new release to Marketplace'
+    env:
+      PAT_MARKETPLACE: $(PAT_Marketplace)
     inputs:
       targetType: 'inline'
       script: |
