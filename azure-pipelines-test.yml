@@ -61,7 +61,7 @@ jobs:
   displayName: 'Deploy latest SqlQueryTools commit'
   dependsOn:
   - Build_SqlQueryTools
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'], dependencies.Build_SqlQueryTools.outputs['PreviousVsixManifest.VsixVersion']), eq('1', '2'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'], dependencies.Build_SqlQueryTools.outputs['PreviousVsixManifest.VsixVersion']))
   steps:
 
   - task: PowerShell@2
