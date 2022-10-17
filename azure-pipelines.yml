@@ -160,6 +160,8 @@ jobs:
       script: |
         $personalAccessToken = ${env:PAT_MARKETPLACE}
         $vsixPath = Resolve-Path  $(Build.StagingDirectory)\Artifact\SqlQueryTools.vsix
-        echo "visix path = $vsixPath"
         $publishManifestPath = Resolve-Path $(Build.StagingDirectory)\Artifact\publish.extension.manifest.json
-        echo "publish manifest path = $publishManifestPath"
+        # Find the location of VsixPublisher
+        $Installation = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -format json | ConvertFrom-Json
+        $vsixPublisher = Join-Path -Path $Installation.installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
+        echo "vsix publisher path = $vsixPublisher"
