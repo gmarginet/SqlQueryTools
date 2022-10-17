@@ -33,10 +33,12 @@ jobs:
       artifactName: 'drop'
       TargetPath: '$(Build.ArtifactStagingDirectory)'
 - job: CheckDeployNeeded
+  displayName: 'Check if the current build needs to be released'
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
   - task: DownloadGitHubRelease@0
+    displayName: 'Download the latest release from GitHub'
     inputs:
       connection: 'github release connection'
       userRepository: 'gmarginet/SqlQueryTools'
@@ -44,14 +46,23 @@ jobs:
       itemPattern: '**/*.vsix'
       downloadPath: '$(System.ArtifactsDirectory)'
   - task: ExtractFiles@1
+    displayName: 'Extract the latest release'
     inputs:
       archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
       destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
       cleanDestinationFolder: true
       overwriteExistingFiles: true
+  - powershell: |
+      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\source.extension.vsixmanifest
+      Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
+      [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
+      $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
+      Write-Host "previousVsixVersion = $previousVsixVersion"
+      Write-Host "##vso[task.setvariable variable=MyPreviousVsixVersion;]$previousVsixVersion"
+    displayName: 'Read previous vsix version from manifest file of previous release'
 - job: Deploy
   dependsOn: CheckDeployNeeded
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['MyVsixVersion'], variables['MyPreviousVsixVersion']))
   steps:
   - task: DownloadBuildArtifacts@1
     displayName: 'Download artifact'
