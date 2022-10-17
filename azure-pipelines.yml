@@ -98,11 +98,14 @@ jobs:
   dependsOn:
   - Build_SqlQueryTools
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'], dependencies.Build_SqlQueryTools.outputs['PreviousVsixManifest.VsixVersion']))
+  variables:
+    currentVsixVersion: $[ dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'] ]
   steps:
 
   - checkout: none
 
   - task: DownloadPipelineArtifact@2
+    displayName: 'Download artifact'
     inputs:
       buildType: 'current'
       artifactName: 'SqlQueryTools'
@@ -113,6 +116,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        echo "Start Deploy"
+        echo "Start Deploy of $(currentVsixVersion)"
         $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
         Get-ChildItem $vsixPath
+
