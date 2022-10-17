@@ -145,29 +145,28 @@ jobs:
         $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
         Get-ChildItem $vsixPath
 
-#  - task: GitHubRelease@1
-#    displayName: 'Publish new release to GitHub'
-#    inputs:
-#      gitHubConnection: 'github release connection'
-#      repositoryName: 'gmarginet/SqlQueryTools'
-#      action: 'create'
-#      target: '$(Build.SourceVersion)'
-#      tagSource: 'userSpecifiedTag'
-#      tag: 'v$(currentVsixVersion)'
-#      assets: '$(Build.StagingDirectory)/Artifact/SqlQueryTools.vsix'
-#      changeLogCompareToRelease: 'lastFullRelease'
-#      changeLogType: 'issueBased'
-#      changeLogLabels: 
+  - task: GitHubRelease@1
+    displayName: 'Publish new release to GitHub'
+    inputs:
+      gitHubConnection: 'github release connection'
+      repositoryName: 'gmarginet/SqlQueryTools'
+      action: 'create'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'userSpecifiedTag'
+      tag: 'v$(currentVsixVersion)'
+      assets: '$(Build.StagingDirectory)/Artifact/SqlQueryTools.vsix'
+      changeLogCompareToRelease: 'lastFullRelease'
+      changeLogType: 'issueBased'
+      changeLogLabels: 
 
   - task: PowerShell@2
     displayName: 'Publish new release to Marketplace'
     inputs:
       targetType: 'inline'
       script: |
-        $personalAccessToken = ${env:PAT_MARKETPLACE}
-        $vsixPath = Resolve-Path  $(Build.StagingDirectory)\Artifact\SqlQueryTools.vsix
+        $pat = ${env:PAT_MARKETPLACE}
+        $payloadPath = Resolve-Path  $(Build.StagingDirectory)\Artifact\SqlQueryTools.vsix
         $publishManifestPath = Resolve-Path $(Build.StagingDirectory)\Artifact\publish.extension.manifest.json
-        # Find the location of VsixPublisher
         $Installation = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -format json | ConvertFrom-Json
         $vsixPublisher = Join-Path -Path $Installation.installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
-        echo "vsix publisher path = $vsixPublisher"
+        & $vsixPublisher publish -payload $payloadPath -publishManifest $publishManifestPath -personalAccessToken $pat -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
