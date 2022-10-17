@@ -14,7 +14,10 @@ variables:
   - name: buildConfiguration
     value: 'Release'
     readonly: true
-  - name: vVsixVersion
+  - name: currentVsixVersion
+    value: ''
+    readonly: false
+  - name: previousVsixVersion
     value: ''
     readonly: false
 
@@ -26,30 +29,30 @@ jobs:
   steps:
 
   - powershell: |
-      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
-      Write-Host "vsixManifestPath = $vsixManifestPath"
-      [xml]$vsixManifestContent = Get-Content $vsixManifestPath
+      #$vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
+      #Write-Host "vsixManifestPath = $vsixManifestPath"
+      [xml]$vsixManifestContent = Get-Content Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
-      Write-Host "vsixVersion = $vsixVersion"
-      Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
+      Write-Host "Found vsix version = $vsixVersion"
+      #Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
       echo "##vso[task.setvariable variable=vVsixVersion]$vsixVersion"
     name: GetCurrentVersion
     displayName: 'Read current vsix version from manifest file'
 
-  - powershell: |
-      Write-Host "vVsixVersion = $(vVsixVersion)"
-      Write-Host "VsixVersion = $(MyVsixVersion)"
-      $buildInfo = @{
-        VsixVersion = $(MyVsixVersion)
-      }
-      $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
-    displayName: 'Create BuildInfo.json'
+#  - powershell: |
+#      Write-Host "currentVsixVersion = $(currentVsixVersion)"
+#      #Write-Host "VsixVersion = $(MyVsixVersion)"
+#      $buildInfo = @{
+#        VsixVersion = $(MyVsixVersion)
+#      }
+#      $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
+#    displayName: 'Create BuildInfo.json'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish artifact'
-    inputs:
-      artifactName: 'drop'
-      TargetPath: '$(Build.ArtifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
+#    displayName: 'Publish artifact'
+#    inputs:
+#      artifactName: 'drop'
+#      TargetPath: '$(Build.ArtifactStagingDirectory)'
 
 
 
