@@ -40,6 +40,8 @@ jobs:
         README.md
         **/SqlQueryTools.vsix
       TargetFolder: '$(Build.StagingDirectory)/Artifact'
+      CleanTargetFolder: true
+      flattenFolders: true
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact folder'
