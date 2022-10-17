@@ -96,15 +96,15 @@ jobs:
   - Check
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('$[variables.currentVsixVersion]', variables['MyPreviousVsixVersion']))
   steps:
-  - task: DownloadBuildArtifacts@1
-    displayName: 'Download artifact'
-    inputs:
-      artifactName: 'drop'
-      downloadPath: '$(System.ArtifactsDirectory)'
+#  - task: DownloadBuildArtifacts@1
+#    displayName: 'Download artifact'
+#    inputs:
+#      artifactName: 'drop'
+#      downloadPath: '$(System.ArtifactsDirectory)'
   - powershell: |
       echo "Current vsix version = $[variables.currentVsixVersion]"
-      $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
-      Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
-      $buildInfo = Get-Content $buildInfoJsonPath | ConvertFrom-Json
-      Write-Host "vsixVersion = $($buildInfo.VsixVersion)"
+#      $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
+#      Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
+#      $buildInfo = Get-Content $buildInfoJsonPath | ConvertFrom-Json
+#      Write-Host "vsixVersion = $($buildInfo.VsixVersion)"
     displayName: 'Read BuildInfo.json'
