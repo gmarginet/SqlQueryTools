@@ -39,14 +39,14 @@ jobs:
     name: GetCurrentVersion
     displayName: 'Read current vsix version from manifest file'
 
-#  - powershell: |
-#      Write-Host "currentVsixVersion = $(currentVsixVersion)"
+  - powershell: |
+      Write-Host "currentVsixVersion = $(currentVsixVersion)"
 #      #Write-Host "VsixVersion = $(MyVsixVersion)"
 #      $buildInfo = @{
 #        VsixVersion = $(MyVsixVersion)
 #      }
 #      $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
-#    displayName: 'Create BuildInfo.json'
+    displayName: 'Create BuildInfo.json'
 
 #  - task: PublishBuildArtifacts@1
 #    displayName: 'Publish artifact'
@@ -80,6 +80,7 @@ jobs:
       overwriteExistingFiles: false
 
   - powershell: |
+      Write-Host "currentVsixVersion = $(currentVsixVersion)"
       $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\extension.vsixmanifest
       Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
       [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
@@ -94,7 +95,7 @@ jobs:
   dependsOn:
   - Build
   - Check
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['currentVsixVersion'], variables['previousVsixVersion']))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['currentVsixVersion'], variables['previousVsixVersion']), eq('1', '2'))
   steps:
 #  - task: DownloadBuildArtifacts@1
 #    displayName: 'Download artifact'
