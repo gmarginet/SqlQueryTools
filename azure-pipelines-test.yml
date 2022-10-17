@@ -53,7 +53,7 @@ jobs:
       cleanDestinationFolder: true
       overwriteExistingFiles: true
   - powershell: |
-      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\source.extension.vsixmanifest
+      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\src\SqlQueryTools\source.extension.vsixmanifest
       Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
       [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
       $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
