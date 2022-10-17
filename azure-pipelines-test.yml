@@ -108,6 +108,8 @@ jobs:
 - job: Check
   displayName: 'Check if the current build needs to be released'
   dependsOn: Build_SqlQueryTools
+  variables:
+    previousVsixVersion: $[ dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'] ]  
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
 
@@ -116,11 +118,11 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env:CURRENTVSIXVERSION"
-        #echo "Global previous vsix version = $(previousVsixVersion)"
+        #echo "Global current vsix version = $(currentVsixVersion)"
+        #echo "c vsix = $env:CURRENTVSIXVERSION"
+        echo "Previous vsix version = $(previousVsixVersion)"
         #echo "p vsix = $env:PREVIOUSVSIXVERSION"
-        echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'])"
+        #echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'])"
 
 #  - task: DownloadGitHubRelease@0
 #    displayName: 'Download the latest release from GitHub'
