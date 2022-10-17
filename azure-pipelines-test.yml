@@ -118,8 +118,8 @@ jobs:
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
         echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Global previous vsix version = $(previousVsixVersion)"
-        echo "p vsix = $env:PREVIOUSVSIXVERSION"
+        #echo "Global previous vsix version = $(previousVsixVersion)"
+        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
         echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'])"
 
 #  - task: DownloadGitHubRelease@0
@@ -155,7 +155,7 @@ jobs:
   dependsOn:
   - Build_SqlQueryTools
   - Check
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables.currentVsixVersion, ''), eq('1', '2'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'], ''), eq('1', '2'))
   steps:
 
   - task: PowerShell@2
