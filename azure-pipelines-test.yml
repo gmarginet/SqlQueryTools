@@ -34,13 +34,17 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
+        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "Global current vsix version = $(previousVsixVersion)"
+        echo "c vsix = $env.PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
     inputs:
       targetType: 'inline'
       script: |
-        echo "##vso[task.setvariable variable=currentVsixVersion]testValue1"
+        echo "##vso[task.setvariable variable=currentVsixVersion]testValue1.1"
+        echo "##vso[task.setvariable variable=currentVsixVersion;isOutput=true]testValue1.2"
 
   - task: PowerShell@2
     displayName: 'test get var'
@@ -48,13 +52,17 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
+        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "Global current vsix version = $(previousVsixVersion)"
+        echo "c vsix = $env.PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
     inputs:
       targetType: 'inline'
       script: |
-        echo "##vso[task.setvariable variable=currentVsixVersion]testValue2"
+        echo "##vso[task.setvariable variable=currentVsixVersion]testValue2.1"
+        echo "##vso[task.setvariable variable=currentVsixVersion;isOutput=true]testValue2.2"
 
   - task: PowerShell@2
     displayName: 'test get var'
@@ -62,6 +70,10 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
+        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "Global current vsix version = $(previousVsixVersion)"
+        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+
 #  - powershell: |
 #      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
 #      #Write-Host "vsixManifestPath = $vsixManifestPath"
@@ -102,33 +114,36 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
+        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "Global current vsix version = $(previousVsixVersion)"
+        echo "c vsix = $env.PREVIOUSVSIXVERSION"
 
-  - task: DownloadGitHubRelease@0
-    displayName: 'Download the latest release from GitHub'
-    inputs:
-      connection: 'github release connection'
-      userRepository: 'gmarginet/SqlQueryTools'
-      defaultVersionType: 'latest'
-      itemPattern: '**/*.vsix'
-      downloadPath: '$(System.ArtifactsDirectory)'
+#  - task: DownloadGitHubRelease@0
+#    displayName: 'Download the latest release from GitHub'
+#    inputs:
+#      connection: 'github release connection'
+#      userRepository: 'gmarginet/SqlQueryTools'
+#      defaultVersionType: 'latest'
+#      itemPattern: '**/*.vsix'
+#      downloadPath: '$(System.ArtifactsDirectory)'
 
-  - task: ExtractFiles@1
-    displayName: 'Extract the latest release'
-    inputs:
-      archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
-      destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
-      cleanDestinationFolder: true
-      overwriteExistingFiles: false
+#  - task: ExtractFiles@1
+#    displayName: 'Extract the latest release'
+#    inputs:
+#      archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
+#      destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
+#      cleanDestinationFolder: true
+#      overwriteExistingFiles: false
 
-  - powershell: |
-      Write-Host "currentVsixVersion = $(currentVsixVersion)"
-      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\extension.vsixmanifest
-      Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
-      [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
-      $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
-      Write-Host "previousVsixVersion = $previousVsixVersion"
-      Write-Host "##vso[task.setvariable variable=MyPreviousVsixVersion;]$previousVsixVersion"
-    displayName: 'Read previous vsix version from manifest file of previous release'
+#  - powershell: |
+#      Write-Host "currentVsixVersion = $(currentVsixVersion)"
+#      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\extension.vsixmanifest
+#      Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
+#      [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
+#      $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
+#      Write-Host "previousVsixVersion = $previousVsixVersion"
+#      Write-Host "##vso[task.setvariable variable=MyPreviousVsixVersion;]$previousVsixVersion"
+#    displayName: 'Read previous vsix version from manifest file of previous release'
 
 
 
@@ -138,15 +153,26 @@ jobs:
   - Check
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables.currentVsixVersion, ''), eq('1', '2'))
   steps:
+
+  - task: PowerShell@2
+    displayName: 'test get var'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "Global current vsix version = $(currentVsixVersion)"
+        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "Global current vsix version = $(previousVsixVersion)"
+        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+
 #  - task: DownloadBuildArtifacts@1
 #    displayName: 'Download artifact'
 #    inputs:
 #      artifactName: 'drop'
 #      downloadPath: '$(System.ArtifactsDirectory)'
-  - powershell: |
-      echo "Current vsix version = $(currentVsixVersion)"
+#  - powershell: |
+#      echo "Current vsix version = $(currentVsixVersion)"
 #      $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
 #      Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
 #      $buildInfo = Get-Content $buildInfoJsonPath | ConvertFrom-Json
 #      Write-Host "vsixVersion = $($buildInfo.VsixVersion)"
-    displayName: 'Read BuildInfo.json'
+#    displayName: 'Read BuildInfo.json'
