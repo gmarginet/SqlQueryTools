@@ -37,7 +37,7 @@ jobs:
     displayName: 'Read current vsix version from manifest file'
 
   - powershell: |
-      Write-Host "VsixVersion = $[variables.vVsixVersion]"
+      Write-Host "VsixVersion = ${{ variables.vVsixVersion }}"
       Write-Host "VsixVersion = $(MyVsixVersion)"
       $buildInfo = @{
         VsixVersion = $(MyVsixVersion)
