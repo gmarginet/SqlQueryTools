@@ -39,7 +39,7 @@ jobs:
     displayName: 'Extract the latest release'
     inputs:
       archiveFilePatterns: '$(System.ArtifactsDirectory)/PreviousGitHubRelease/*.vsix'
-      destinationFolder: '$(System.ArtifactsDirectory)/PreviousGitHubRelease'
+      destinationFolder: '$(System.ArtifactsDirectory)/PreviousGitHubRelease/Content'
       cleanDestinationFolder: true
       overwriteExistingFiles: false
 
@@ -49,7 +49,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $vsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousGitHubRelease\extension.vsixmanifest
+        $vsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousGitHubRelease\Content\extension.vsixmanifest
         [xml]$vsixManifestContent = Get-Content $vsixManifestPath
         $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
         echo "Found vsix version = $vsixVersion"
