@@ -94,7 +94,7 @@ jobs:
   dependsOn:
   - Build
   - Check
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build.outputs['GetCurrentVersion.MyVsixVersion'], variables['MyPreviousVsixVersion']))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ variables.currentVsixVersion }}', variables['MyPreviousVsixVersion']))
   steps:
   - task: DownloadBuildArtifacts@1
     displayName: 'Download artifact'
