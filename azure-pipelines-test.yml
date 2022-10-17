@@ -5,9 +5,18 @@ pool:
   vmImage: 'windows-2022'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  - name: solution
+    value: '**/*.sln'
+    readonly: true
+  - name: buildPlatform
+    value: 'Any CPU'
+    readonly: true
+  - name: buildConfiguration
+    value: 'Release'
+    readonly: true
+  - name: vVsixVersion
+    value: ''
+    readonly: false
 
 
 
@@ -23,10 +32,12 @@ jobs:
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "vsixVersion = $vsixVersion"
       Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
+      Write-Host "##vso[task.setvariable variable=vVsixVersion]$vsixVersion"
     name: GetCurrentVersion
     displayName: 'Read current vsix version from manifest file'
 
   - powershell: |
+      Write-Host "VsixVersion = $[variables.vVsixVersion]"
       Write-Host "VsixVersion = $(MyVsixVersion)"
       $buildInfo = @{
         VsixVersion = $(MyVsixVersion)
