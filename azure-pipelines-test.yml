@@ -33,9 +33,9 @@ jobs:
       #Write-Host "vsixManifestPath = $vsixManifestPath"
       [xml]$vsixManifestContent = Get-Content $vsixManifestPath
       $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
-      Write-Host "Found vsix version = $vsixVersion"
+      echo "Found vsix version = $vsixVersion"
       #Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
-      echo "##vso[task.setvariable variable=vVsixVersion]$vsixVersion"
+      echo "##vso[task.setvariable variable=currentVsixVersion]$vsixVersion"
     name: GetCurrentVersion
     displayName: 'Read current vsix version from manifest file'
 
