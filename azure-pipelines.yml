@@ -38,6 +38,7 @@ jobs:
       SourceFolder: '$(Build.SourcesDirectory)'
       Contents: |
         README.md
+        publish.extension.manifest.json
         **/SqlQueryTools.vsix
       TargetFolder: '$(Build.StagingDirectory)/Artifact'
       CleanTargetFolder: true
@@ -138,16 +139,27 @@ jobs:
         $vsixPath = Resolve-Path $(Build.StagingDirectory)\Artifact\
         Get-ChildItem $vsixPath
 
-  - task: GitHubRelease@1
-    displayName: 'Publish new release to GitHub'
+#  - task: GitHubRelease@1
+#    displayName: 'Publish new release to GitHub'
+#    inputs:
+#      gitHubConnection: 'github release connection'
+#      repositoryName: 'gmarginet/SqlQueryTools'
+#      action: 'create'
+#      target: '$(Build.SourceVersion)'
+#      tagSource: 'userSpecifiedTag'
+#      tag: 'v$(currentVsixVersion)'
+#      assets: '$(Build.StagingDirectory)/Artifact/SqlQueryTools.vsix'
+#      changeLogCompareToRelease: 'lastFullRelease'
+#      changeLogType: 'issueBased'
+#      changeLogLabels: 
+
+  - task: PowerShell@2
+    displayName: 'Publish new release to Marketplace'
     inputs:
-      gitHubConnection: 'github release connection'
-      repositoryName: 'gmarginet/SqlQueryTools'
-      action: 'create'
-      target: '$(Build.SourceVersion)'
-      tagSource: 'userSpecifiedTag'
-      tag: 'v$(currentVsixVersion)'
-      assets: '$(Build.StagingDirectory)/Artifact/SqlQueryTools.vsix'
-      changeLogCompareToRelease: 'lastFullRelease'
-      changeLogType: 'issueBased'
-      changeLogLabels: 
+      targetType: 'inline'
+      script: |
+        $personalAccessToken = ${env:PAT_MARKETPLACE}
+        $vsixPath = Resolve-Path  $(Build.StagingDirectory)\Artifact\SqlQueryTools.vsix
+        echo "visix path = $vsixPath"
+        $publishManifestPath = Resolve-Path $(Build.StagingDirectory)\Artifact\publish.extension.manifest.json
+        echo "publish manifest path = $publishManifestPath"
