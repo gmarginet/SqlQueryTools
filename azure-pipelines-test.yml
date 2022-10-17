@@ -1,25 +1,11 @@
 trigger:
 - '*'
-
 pool:
   vmImage: 'windows-2022'
-
 variables:
-  - name: solution
-    value: '**/*.sln'
-    readonly: true
-  - name: buildPlatform
-    value: 'Any CPU'
-    readonly: true
-  - name: buildConfiguration
-    value: 'Release'
-    readonly: true
-  - name: currentVsixVersion
-    value: ''
-    readonly: false
-#  - name: previousVsixVersion
-#    value: ''
-#    readonly: false
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 
 
@@ -29,156 +15,58 @@ jobs:
   steps:
 
   - task: PowerShell@2
-    displayName: 'test get var'
+    name: CurrentVsixManifest
+    displayName: 'Read current vsix version from manifest file'
     inputs:
       targetType: 'inline'
       script: |
-        echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env:CURRENTVSIXVERSION"
-        #echo "Global previous vsix version = $(previousVsixVersion)"
-        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
+        $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
+        [xml]$vsixManifestContent = Get-Content $vsixManifestPath
+        $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
+        echo "Found vsix version = $vsixVersion"
+        echo "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
+
+  - task: DownloadGitHubRelease@0
+    displayName: 'Download the latest release from GitHub'
+    inputs:
+      connection: 'github release connection'
+      userRepository: 'gmarginet/SqlQueryTools'
+      defaultVersionType: 'latest'
+      itemPattern: '**/*.vsix'
+      downloadPath: '$(Build.StagingDirectory)/PreviousGitHubRelease'
+
+  - task: ExtractFiles@1
+    displayName: 'Extract the latest release'
+    inputs:
+      archiveFilePatterns: '$(System.ArtifactsDirectory)/PreviousGitHubRelease/*.vsix'
+      destinationFolder: '$(System.ArtifactsDirectory)/PreviousGitHubRelease'
+      cleanDestinationFolder: true
+      overwriteExistingFiles: false
 
   - task: PowerShell@2
-    displayName: 'test set var'
-    name: SetVersion1
+    name: PreviousVsixManifest
+    displayName: 'Read previous vsix version from manifest file'
     inputs:
       targetType: 'inline'
       script: |
-        echo "##vso[task.setvariable variable=currentVsixVersion]testValue1.1"
-        echo "##vso[task.setvariable variable=previousVsixVersion;isOutput=true]testValue1.2"
-
-  - task: PowerShell@2
-    displayName: 'test get var'
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Global previous vsix version = $(SetVersion1.previousVsixVersion)"
-        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
-
-  - task: PowerShell@2
-    displayName: 'test set var'
-    name: SetVersion2
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "##vso[task.setvariable variable=currentVsixVersion]testValue2.1"
-        echo "##vso[task.setvariable variable=previousVsixVersion;isOutput=true]testValue2.2"
-
-  - task: PowerShell@2
-    displayName: 'test get var'
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Global previous vsix version = $(SetVersion1.previousVsixVersion)"
-        echo "Global previous vsix version = $(SetVersion2.previousVsixVersion)"
-        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
-
-#  - powershell: |
-#      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
-#      #Write-Host "vsixManifestPath = $vsixManifestPath"
-#      [xml]$vsixManifestContent = Get-Content $vsixManifestPath
-#      $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
-#      echo "Found vsix version = $vsixVersion"
-#      #Write-Host "##vso[task.setvariable variable=MyVsixVersion;isOutput=true]$vsixVersion"
-#      echo "##vso[task.setvariable variable=currentVsixVersion]$vsixVersion"
-#    name: GetCurrentVersion
-#    displayName: 'Read current vsix version from manifest file'
-
-#  - powershell: |
-#      Write-Host "currentVsixVersion = $(currentVsixVersion)"
-#      #Write-Host "VsixVersion = $(MyVsixVersion)"
-#      $buildInfo = @{
-#        VsixVersion = $(MyVsixVersion)
-#      }
-#      $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
-#    displayName: 'Create BuildInfo.json'
-
-#  - task: PublishBuildArtifacts@1
-#    displayName: 'Publish artifact'
-#    inputs:
-#      artifactName: 'drop'
-#      TargetPath: '$(Build.ArtifactStagingDirectory)'
+        $vsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousGitHubRelease\extension.vsixmanifest
+        [xml]$vsixManifestContent = Get-Content $vsixManifestPath
+        $vsixVersion = $vsixManifestContent.PackageManifest.Metadata.Identity.Version
+        echo "Found vsix version = $vsixVersion"
+        echo "##vso[task.setvariable variable=VsixVersion;isOutput=true]$vsixVersion"
 
 
 
-- job: Check
-  displayName: 'Check if the current build needs to be released'
-  dependsOn: Build_SqlQueryTools
-  variables:
-    previousVsixVersion: $[ dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'] ]  
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  steps:
-
-  - task: PowerShell@2
-    displayName: 'test get var'
-    inputs:
-      targetType: 'inline'
-      script: |
-        #echo "Global current vsix version = $(currentVsixVersion)"
-        #echo "c vsix = $env:CURRENTVSIXVERSION"
-        echo "Previous vsix version = $(previousVsixVersion)"
-        #echo "p vsix = $env:PREVIOUSVSIXVERSION"
-        #echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'])"
-
-#  - task: DownloadGitHubRelease@0
-#    displayName: 'Download the latest release from GitHub'
-#    inputs:
-#      connection: 'github release connection'
-#      userRepository: 'gmarginet/SqlQueryTools'
-#      defaultVersionType: 'latest'
-#      itemPattern: '**/*.vsix'
-#      downloadPath: '$(System.ArtifactsDirectory)'
-
-#  - task: ExtractFiles@1
-#    displayName: 'Extract the latest release'
-#    inputs:
-#      archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
-#      destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
-#      cleanDestinationFolder: true
-#      overwriteExistingFiles: false
-
-#  - powershell: |
-#      Write-Host "currentVsixVersion = $(currentVsixVersion)"
-#      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\extension.vsixmanifest
-#      Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
-#      [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
-#      $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
-#      Write-Host "previousVsixVersion = $previousVsixVersion"
-#      Write-Host "##vso[task.setvariable variable=MyPreviousVsixVersion;]$previousVsixVersion"
-#    displayName: 'Read previous vsix version from manifest file of previous release'
-
-
-
-- job: Deploy
+- job: Deploy_SqlQueryTools
+  displayName: 'Deploy latest SqlQueryTools commit'
   dependsOn:
   - Build_SqlQueryTools
-  - Check
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['SetVersion2.previousVsixVersion'], ''), eq('1', '2'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'], dependencies.Build_SqlQueryTools.outputs['PreviousVsixManifest.VsixVersion']), eq('1', '2'))
   steps:
 
   - task: PowerShell@2
-    displayName: 'test get var'
+    displayName: 'tmp'
     inputs:
       targetType: 'inline'
       script: |
-        echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env.CURRENTVSIXVERSION"
-        echo "Global current vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env.PREVIOUSVSIXVERSION"
-
-#  - task: DownloadBuildArtifacts@1
-#    displayName: 'Download artifact'
-#    inputs:
-#      artifactName: 'drop'
-#      downloadPath: '$(System.ArtifactsDirectory)'
-#  - powershell: |
-#      echo "Current vsix version = $(currentVsixVersion)"
-#      $buildInfoJsonPath = Resolve-Path $(System.ArtifactsDirectory)\drop\BuildInfo.json
-#      Write-Host "buildInfoJsonPath = $buildInfoJsonPath"
-#      $buildInfo = Get-Content $buildInfoJsonPath | ConvertFrom-Json
-#      Write-Host "vsixVersion = $($buildInfo.VsixVersion)"
-#    displayName: 'Read BuildInfo.json'
+        echo "Deploy"
