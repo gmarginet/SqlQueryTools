@@ -65,7 +65,7 @@ jobs:
 
 
 - job: Get_Previous_SqlQueryTools_Release
-  displayName: 'Build latest SqlQueryTools commit'
+  displayName: 'Get previous SqlQueryTools release'
   dependsOn:
   - Build_SqlQueryTools
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -109,7 +109,13 @@ jobs:
   dependsOn:
   - Build_SqlQueryTools
   - Get_Previous_SqlQueryTools_Release
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'], dependencies.Get_Previous_SqlQueryTools_Release.outputs['PreviousVsixManifest.VsixVersion']))
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'],
+         dependencies.Get_Previous_SqlQueryTools_Release.outputs['PreviousVsixManifest.VsixVersion'])
+    )
   variables:
     currentVsixVersion: $[ dependencies.Build_SqlQueryTools.outputs['CurrentVsixManifest.VsixVersion'] ]
   steps:
@@ -141,6 +147,7 @@ jobs:
       target: '$(Build.SourceVersion)'
       tagSource: 'userSpecifiedTag'
       tag: 'v$(currentVsixVersion)'
+      assets: '$(Build.StagingDirectory)/Artifact/SqlQueryTools.vsix'
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
       changeLogLabels: 
