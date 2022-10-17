@@ -20,6 +20,7 @@ jobs:
       Write-Host "vsixVersion = $vsixVersion"
       Write-Host "##vso[task.setvariable variable=MyVsixVersion;]$vsixVersion"
     displayName: 'Read vsix version from manifest file'
+
   - powershell: |
       Write-Host "myVsixVersion = $(MyVsixVersion)"
       $buildInfo = @{
@@ -27,16 +28,21 @@ jobs:
       }
       $buildInfo | ConvertTo-Json  | Out-File "$(Build.ArtifactStagingDirectory)\BuildInfo.json"
     displayName: 'Create BuildInfo.json'
+
   - task: PublishBuildArtifacts@1
     displayName: 'Publish artifact'
     inputs:
       artifactName: 'drop'
       TargetPath: '$(Build.ArtifactStagingDirectory)'
+
+
+
 - job: CheckDeployNeeded
   displayName: 'Check if the current build needs to be released'
   dependsOn: Build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
+
   - task: DownloadGitHubRelease@0
     displayName: 'Download the latest release from GitHub'
     inputs:
@@ -45,21 +51,26 @@ jobs:
       defaultVersionType: 'latest'
       itemPattern: '**/*.vsix'
       downloadPath: '$(System.ArtifactsDirectory)'
+
   - task: ExtractFiles@1
     displayName: 'Extract the latest release'
     inputs:
       archiveFilePatterns: '$(System.ArtifactsDirectory)/*.vsix'
       destinationFolder: '$(System.ArtifactsDirectory)/PreviousRelease'
       cleanDestinationFolder: true
-      overwriteExistingFiles: true
+      overwriteExistingFiles: false
+
   - powershell: |
-      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\src\SqlQueryTools\source.extension.vsixmanifest
+      $previousVsixManifestPath = Resolve-Path $(System.ArtifactsDirectory)\PreviousRelease\src\SqlQueryTools\extension.vsixmanifest
       Write-Host "previousVsixManifestPath = $previousVsixManifestPath"
       [xml]$previousVsixManifestContent = Get-Content $previousVsixManifestPath
       $previousVsixVersion = $previousVsixManifestContent.PackageManifest.Metadata.Identity.Version
       Write-Host "previousVsixVersion = $previousVsixVersion"
       Write-Host "##vso[task.setvariable variable=MyPreviousVsixVersion;]$previousVsixVersion"
     displayName: 'Read previous vsix version from manifest file of previous release'
+
+
+
 - job: Deploy
   dependsOn: CheckDeployNeeded
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['MyVsixVersion'], variables['MyPreviousVsixVersion']))
