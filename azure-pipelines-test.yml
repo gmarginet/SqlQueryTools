@@ -36,7 +36,7 @@ jobs:
         echo "Global current vsix version = $(currentVsixVersion)"
         echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global previous vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env:PREVIOUSVSIXVERSION"
+        echo "p vsix = $env:PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
@@ -117,7 +117,7 @@ jobs:
         echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global previous vsix version = $(previousVsixVersion)"
         echo "p vsix = $env:PREVIOUSVSIXVERSION"
-        echo "pd vsix = $dependencies.Build_SqlQueryTools.outputs['setVariable.previousVsixVersion']"
+        echo "pd vsix = $(dependencies.Build_SqlQueryTools.outputs['setVariable.previousVsixVersion'])"
 
 #  - task: DownloadGitHubRelease@0
 #    displayName: 'Download the latest release from GitHub'
