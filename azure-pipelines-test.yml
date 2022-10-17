@@ -96,6 +96,13 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
 
+  - task: PowerShell@2
+    displayName: 'test get var'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "Global current vsix version = $(currentVsixVersion)"
+
   - task: DownloadGitHubRelease@0
     displayName: 'Download the latest release from GitHub'
     inputs:
