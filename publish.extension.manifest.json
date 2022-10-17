@@ -5,7 +5,7 @@
         "internalName": "SqlQueryTools",
         "tags": [ "Micro ORM", "Query string", "SQL server" ]
     },
-    "overview": "../README.md",
+    "overview": "README.md",
     "priceCategory": "free",
     "publisher": "Gert marginet",
     "private": false,
