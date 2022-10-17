@@ -34,9 +34,9 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global current vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+        echo "c vsix = $env:PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
@@ -52,9 +52,9 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global current vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+        echo "c vsix = $env:PREVIOUSVSIXVERSION"
 
   - task: PowerShell@2
     displayName: 'test set var'
@@ -70,9 +70,9 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global current vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+        echo "c vsix = $env:PREVIOUSVSIXVERSION"
 
 #  - powershell: |
 #      $vsixManifestPath = Resolve-Path $(Build.SourcesDirectory)\src\SqlQueryTools\source.extension.vsixmanifest
@@ -114,9 +114,9 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Global current vsix version = $(currentVsixVersion)"
-        echo "c vsix = $env.CURRENTVSIXVERSION"
+        echo "c vsix = $env:CURRENTVSIXVERSION"
         echo "Global current vsix version = $(previousVsixVersion)"
-        echo "c vsix = $env.PREVIOUSVSIXVERSION"
+        echo "c vsix = $env:PREVIOUSVSIXVERSION"
 
 #  - task: DownloadGitHubRelease@0
 #    displayName: 'Download the latest release from GitHub'
