@@ -65,7 +65,7 @@ namespace SqlQueryTools.FileHandlers
             var inputPhysicalFile = await PhysicalFile.FromFileAsync(inputFilePath);
             var project = inputPhysicalFile.ContainingProject;
 
-            var connectionString = await project.GetSqlQueryToolsConnectionStringAsync();
+            var connectionString = await project.GetConnectionStringAsync();
             if(string.IsNullOrWhiteSpace(connectionString))
             {
                 await outputPane.WriteLineAsync("\tCode could not be generated due to connection string not set!");
@@ -235,10 +235,8 @@ namespace SqlQueryTools.FileHandlers
             contentBuilder.AppendLine($"\t{{");
             contentBuilder.AppendLine($"\t\tpublic const string {options.SqlStringFieldName} = @\"{sqlCode}\";");
 
-            var generateParameterNames = await inputPhysicalFile.GetAttributeAsync(AddSqlFileCommand.GenerateParameterNamesAttributeName);
-            var generatePocoClass = await inputPhysicalFile.GetAttributeAsync(AddSqlFileCommand.GeneratePocoClassAttributeName);
-
-            if (true)
+            var generateParameterNames = await inputPhysicalFile.GetGenerateParameterNamesAsync(options.GenerateParameterNames);
+            if (generateParameterNames)
             {
                 foreach (var name in declaredParameters.Keys)
                 {
@@ -251,10 +249,11 @@ namespace SqlQueryTools.FileHandlers
             contentBuilder.AppendLine($"\t}}");
             contentBuilder.AppendLine($"}}");
 
-            if (false)
+            var generatePocoClass = await inputPhysicalFile.GetGeneratePocoClassAsync(options.GeneratePocoClass);
+            if (generatePocoClass)
             {
                 contentBuilder.AppendLine();
-                contentBuilder.AppendLine($"\tpublic class {className}Dto");
+                contentBuilder.AppendLine($"\tpublic class {className}{options.PocoClassSuffix}");
                 contentBuilder.AppendLine($"\t{{");
 
                 foreach (var columnInfo in queryMetaData)
