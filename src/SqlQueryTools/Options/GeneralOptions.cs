@@ -45,5 +45,11 @@ namespace SqlQueryTools.Options
         [Description("This suffix will be added to the filename when SqlQueryTools generates a code file.")]
         [DefaultValue(".sqt.cs")]
         public string CodeFileSuffix { get; set; } = ".sqt.cs";
+
+        [Category("Code generator")]
+        [DisplayName("Poco Class suffix")]
+        [Description("This suffix will be added to the poco class name SqlQueryTools will generate.")]
+        [DefaultValue("Poco")]
+        public string PocoClassSuffix { get; set; } = "Poco";
     }
 }

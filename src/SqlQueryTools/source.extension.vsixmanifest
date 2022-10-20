@@ -5,7 +5,7 @@
         <DisplayName>SqlQueryTools</DisplayName>
         <Description xml:space="preserve">Generate class with string based on Sql file content.</Description>
         <MoreInfo>http://github.com/gmarginet/SqlQueryTools</MoreInfo>
-        <License>License.txt</License>
+        <License>Resources\LICENSE</License>
         <Icon>Resources\icons8-database-administrator-96.png</Icon>
         <PreviewImage>Resources\icons8-database-administrator-96.png</PreviewImage>
     </Metadata>
