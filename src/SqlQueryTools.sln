@@ -12,12 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\sqlQueryTools-CI-CD.yml = ..\sqlQueryTools-CI-CD.yml
 	EndProjectSection
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Community.VisualStudio.Toolkit.Shared", "..\..\Community.VisualStudio.Toolkit\src\toolkit\Community.VisualStudio.Toolkit.Shared\Community.VisualStudio.Toolkit.Shared.shproj", "{5EC463AC-24CB-443E-9FF9-91B7ECB1F822}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Community.VisualStudio.Toolkit.17.0", "..\..\Community.VisualStudio.Toolkit\src\toolkit\Community.VisualStudio.Toolkit.17.0\Community.VisualStudio.Toolkit.17.0.csproj", "{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Community.VisualStudio.Toolkit.Analyzers", "..\..\Community.VisualStudio.Toolkit\src\analyzers\Community.VisualStudio.Toolkit.Analyzers\Community.VisualStudio.Toolkit.Analyzers.csproj", "{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,31 +28,11 @@ Global
 		{2016D785-288A-44D2-A380-89DF53B478DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2016D785-288A-44D2-A380-89DF53B478DD}.Release|x86.ActiveCfg = Release|x86
 		{2016D785-288A-44D2-A380-89DF53B478DD}.Release|x86.Build.0 = Release|x86
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Debug|x86.Build.0 = Debug|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Release|x86.ActiveCfg = Release|Any CPU
-		{8B63F6D1-45DA-4428-88C4-1EF1D772DCB2}.Release|x86.Build.0 = Release|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Debug|x86.Build.0 = Debug|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Release|x86.ActiveCfg = Release|Any CPU
-		{A52D9B36-DC67-489E-9500-44C1BE5ABDC5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F69EC221-2624-4423-9115-48CA8EC8E57A}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\..\Community.VisualStudio.Toolkit\src\toolkit\Community.VisualStudio.Toolkit.Shared\VSSDK.Helpers.Shared.projitems*{5ec463ac-24cb-443e-9ff9-91b7ecb1f822}*SharedItemsImports = 13
-		..\..\Community.VisualStudio.Toolkit\src\toolkit\Community.VisualStudio.Toolkit.Shared\VSSDK.Helpers.Shared.projitems*{8b63f6d1-45da-4428-88c4-1ef1d772dcb2}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
