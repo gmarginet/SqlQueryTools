@@ -27,6 +27,8 @@ jobs:
     inputs:
       command: 'restore'
       restoreSolution: '**/SqlQueryTools.sln'
+      feedsToUse: 'config'
+      nugetConfigPath: '**/NuGet.config'
 
   - task: VSBuild@1
     displayName: 'Build SqlQueryTools solution'
