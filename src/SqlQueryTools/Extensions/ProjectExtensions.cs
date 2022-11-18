@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SqlQueryTools.Extensions
 {
@@ -8,17 +6,21 @@ namespace SqlQueryTools.Extensions
     {
         public const string SqlQueryToolsConnectionStringAttributeName = "SqlQueryToolsConnectionString";
 
-        public static async Task<string> GetSqlQueryToolsConnectionStringAsync(this Project project)
+        public static async Task<string> GetConnectionStringAsync(this Project project, string defaultValue = "")
         {
-            var connectionString = await project.GetAttributeAsync(SqlQueryToolsConnectionStringAttributeName);
-            if (string.IsNullOrWhiteSpace(connectionString))
+            var value = await project.GetAttributeAsync(SqlQueryToolsConnectionStringAttributeName);
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                connectionString = string.Empty;
-                await project.TrySetAttributeAsync(SqlQueryToolsConnectionStringAttributeName, connectionString);
-                await project.SaveAsync();
+                return value;
             }
 
-            return connectionString;
+            await project.TrySetConnectionStringAsync(defaultValue);
+            return defaultValue;
+        }
+
+        public static async Task<bool> TrySetConnectionStringAsync(this Project project, string value)
+        {
+            return await project.TrySetAttributeAsync(SqlQueryToolsConnectionStringAttributeName, value);
         }
 
         public static async Task AddNestedFileAsync(this Project project, string newFilePath, PhysicalFile dependentUponFile)
@@ -29,7 +31,6 @@ namespace SqlQueryTools.Extensions
                 await project.AddExistingFilesAsync(newFilePath);
                 newPhysicalFile = project.GetPhysicalFile(newFilePath);
                 await newPhysicalFile.TrySetAttributeAsync(PhysicalFileAttribute.DependentUpon, dependentUponFile.Text);
-                await project.SaveAsync();
             }
         }
 

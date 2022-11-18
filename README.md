@@ -36,6 +36,11 @@ The connection string can be set in the .csproj file you just added the sql file
 
 ![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ConnectionString.png?raw=true)
 
+As of version 1.4 you can use the the properties window to edit the connection string, you just need to select the project file in the sollution explorer and open the properties window.
+
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ConnectionString_PropertiesWindow.png?raw=true)
+
+
 Now you can start writing your sql query.
 You can remove all comments but if you use parameters in your query you should put the parameter declarations above the 'End Of Parameter Declaration' marker.
 And your actual query below the marker.
@@ -62,9 +67,38 @@ The solution explorer will now look like this.
 ![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/SolutionExplorer.png?raw=true)
 
 If you don't like the file suffixes or the parameter declaration marker.
-These can be changed via 'Tools/Options/SqlQueryTools
+These can be changed via 'Tools/Options/SqlQueryTools'
 
 ![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/Options.png?raw=true)
+
+### Parameters
+
+By default SqlQueryTools was generating const fields for every parameter that you declared in the parameter declaration section.
+
+As of version 1.4 this can be turned of in the properties window while the sql file is selected in the solution explorer.
+
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/Sql_ParametersWindow.png?raw=true)
+
+In 'Tools/Options/SqlQueryTools' you can change the default for new files that are created with the SqlQueryTools 'Add Sql File' context menu item.
+
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/Options_Extra.png?raw=true)
+
+### Poco class
+
+From version 1.4 you can also ask SqlQueryTools to generate a poco class for the result that you get back from your query.
+
+Lets use the following sql as an example
+
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleSql_Poco.png?raw=true)
+
+The code generated for this sql with 'Generate Poco' turned on would be the following:
+
+![image](https://github.com/gmarginet/SqlQueryTools/blob/master/art/ExampleCode_Poco.png?raw=true)
+
+You can turn on this feature at sql file level by using the properties window of the file, or change the default for new files via 'Tools/Options/SqlQueryTools'.
+
+
+
 
 ### License
 

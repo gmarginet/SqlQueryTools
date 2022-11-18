@@ -7,8 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlQueryTools", "SqlQueryTo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CECF109E-D547-4A4E-B312-056E93D989D2}"
 	ProjectSection(SolutionItems) = preProject
-		..\LICENSE = ..\LICENSE
+		..\publish.extension.manifest.json = ..\publish.extension.manifest.json
 		..\README.md = ..\README.md
+		..\sqlQueryTools-CI-CD.yml = ..\sqlQueryTools-CI-CD.yml
 	EndProjectSection
 EndProject
 Global
