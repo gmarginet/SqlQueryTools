@@ -247,7 +247,6 @@ namespace SqlQueryTools.FileHandlers
             }
 
             contentBuilder.AppendLine($"\t}}");
-            contentBuilder.AppendLine($"}}");
 
             var generatePocoClass = await inputPhysicalFile.GetGeneratePocoClassAsync(options.GeneratePocoClass);
             if (generatePocoClass)
@@ -266,6 +265,8 @@ namespace SqlQueryTools.FileHandlers
 
                 contentBuilder.AppendLine($"\t}}");
             }
+
+            contentBuilder.AppendLine($"}}");
 
             var newFileName = $"{inputFileNameWithoutSuffix}{options.CodeFileSuffix}";
             var newFilePath = Path.Combine(inputFileDirectory, newFileName);
