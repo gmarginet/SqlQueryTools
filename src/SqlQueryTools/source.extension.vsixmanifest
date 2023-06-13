@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="SqlQueryTools.46119220-B112-4974-BF62-BA76F5548B13" Version="1.4" Language="en-US" Publisher="Gert Marginet" />
+        <Identity Id="SqlQueryTools.46119220-B112-4974-BF62-BA76F5548B13" Version="1.5" Language="en-US" Publisher="Gert Marginet" />
         <DisplayName>SqlQueryTools</DisplayName>
         <Description xml:space="preserve">Generate class with string based on Sql file content.</Description>
         <MoreInfo>http://github.com/gmarginet/SqlQueryTools</MoreInfo>
