@@ -97,9 +97,6 @@ The code generated for this sql with 'Generate Poco' turned on would be the foll
 
 You can turn on this feature at sql file level by using the properties window of the file, or change the default for new files via 'Tools/Options/SqlQueryTools'.
 
-
-
-
 ### License
 
 MIT
