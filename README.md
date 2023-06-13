@@ -97,6 +97,14 @@ The code generated for this sql with 'Generate Poco' turned on would be the foll
 
 You can turn on this feature at sql file level by using the properties window of the file, or change the default for new files via 'Tools/Options/SqlQueryTools'.
 
+### Table variable declaration support
+
+Table varable declaration support was added in version 1.5.
+Before this version the code generation failed with the error: Variable @VariableName is used in the query, but it is not defined in the 'Parameter Declaration'.
+
+To make this possible the parsing of the sql code has been rewritten. The extra advantage is that we don't need the 'End Of Parameter Declaration' marker line anymore.
+So whem you create a new Sql Tools file it is no longer added. In existing files the line is ignored as any other comment line.
+
 ### License
 
 MIT
