@@ -90,36 +90,39 @@ namespace SqlQueryTools.FileHandlers
 
             var parameterDeclarationList = new List<(string Name, string Type)>();
             var sqlCodeBuilder = new StringBuilder();
-            foreach (var statement in sqlStatementList.Statements)
+            for (int i = 0; i < sqlStatementList.Statements.Count; i++)
             {
-                if (statement is DeclareVariableStatement variableStatement)
+                if (sqlStatementList.Statements[i] is DeclareVariableStatement variableStatement)
                 {
                     foreach (var declaration in variableStatement.Declarations)
                     {
                         var name = declaration.VariableName.Value;
                         var type = string.Empty;
-                        for ( var i = declaration.DataType.FirstTokenIndex; i <= declaration.DataType.LastTokenIndex; i++)
+                        for ( var j = declaration.DataType.FirstTokenIndex; j <= declaration.DataType.LastTokenIndex; j++)
                         {
-                            type += declaration.DataType.ScriptTokenStream[i].Text;
+                            type += declaration.DataType.ScriptTokenStream[j].Text;
                         }
                         parameterDeclarationList.Add((name, type));
                     }
                     continue;
                 }
 
-                if (statement is DeclareTableVariableStatement tableVariableStatement)
+                if (sqlStatementList.Statements[i] is DeclareTableVariableStatement tableVariableStatement)
                 {
                     var name = tableVariableStatement.Body.VariableName.Value;
                     parameterDeclarationList.Add((name, null));
                 }
 
-                for (int i = statement.FirstTokenIndex; i <= statement.LastTokenIndex; i++)
+                for (int j = sqlStatementList.Statements[i].FirstTokenIndex; j <= sqlStatementList.Statements[i].LastTokenIndex; j++)
                 {
-                    sqlCodeBuilder.Append(statement.ScriptTokenStream[i].Text);
+                    sqlCodeBuilder.Append(sqlStatementList.Statements[i].ScriptTokenStream[j].Text);
                 }
 
-                sqlCodeBuilder.AppendLine();
-                sqlCodeBuilder.AppendLine();
+                if ((i + 1)  < sqlStatementList.Statements.Count)
+                {
+                    sqlCodeBuilder.AppendLine();
+                    sqlCodeBuilder.AppendLine();
+                }
             }
 
             if (sqlCodeBuilder.Length <= 0)

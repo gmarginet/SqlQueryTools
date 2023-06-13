@@ -11,12 +11,6 @@ namespace SqlQueryTools.Options
         public string SqlFileSuffix { get; set; } = ".sqt.sql";
 
         [Category("Sql File")]
-        [DisplayName("End of parameter declaration marker")]
-        [Description("Marker used in sql files to indicate the end of the parameter declaration.")]
-        [DefaultValue("---------- End Of Parameter Declaration ----------")]
-        public string EndOfParameterDeclarationMarker { get; set; } = "---------- End Of Parameter Declaration ----------";
-
-        [Category("Sql File")]
         [DisplayName("Default generate parameter names")]
         [Description("This default is used when a new sql file is created. It marks that the parameter name fields should be generated for this sql file.")]
         [DefaultValue(true)]

@@ -64,10 +64,6 @@ namespace SqlQueryTools
 
             var contentBuilder = new StringBuilder();
 
-            contentBuilder.AppendLine("--Add your declarations here.");
-            contentBuilder.AppendLine();
-            contentBuilder.AppendLine(options.EndOfParameterDeclarationMarker);
-            contentBuilder.AppendLine();
             contentBuilder.AppendLine("--Add your query here.");
 
             File.WriteAllText(newFileFullName, contentBuilder.ToString());
