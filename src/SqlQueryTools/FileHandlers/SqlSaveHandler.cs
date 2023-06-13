@@ -75,97 +75,63 @@ namespace SqlQueryTools.FileHandlers
 
             var sqlFileContent = doc.TextBuffer.CurrentSnapshot.GetText();
             var parser = new TSql160Parser(false);
-            var sqlParserTokens = parser.GetTokenStream(new StringReader(sqlFileContent), out var sqlParserErrors);
-            if (sqlParserErrors.Count > 0)
+            var sqlStatementList = parser.ParseStatementList(new StringReader(sqlFileContent), out var sqlParserStatementsErrors);
+            if (sqlParserStatementsErrors.Count > 0)
             {
                 await outputPane.WriteLineAsync("\tCode could not be generated due to the following sql parse errors:");
-                foreach (var error in sqlParserErrors)
+                var counter = 0;
+                foreach (var error in sqlParserStatementsErrors)
                 {
-                    await outputPane.WriteLineAsync($"\t\t{error.Message} (line={error.Line}, column={error.Column})");
+                    counter++;
+                    await outputPane.WriteLineAsync($"\t\t{counter}.) {error.Message} (line={error.Line}, column={error.Column})");
                 }
                 return;
             }
 
-            var hasDeclarationSection = sqlParserTokens.Any(x => x.TokenType == TSqlTokenType.SingleLineComment && x.Text == options.EndOfParameterDeclarationMarker);
-            var endOfParameterDeclarationMarkerFound = false;
-            var declaredParameters = new Dictionary<string,string>();
-            var foundParameterDeclaration = String.Empty;
+            var parameterDeclarationList = new List<(string Name, string Type)>();
             var sqlCodeBuilder = new StringBuilder();
-            var whiteSpaceBuffer = new StringBuilder();
-            foreach (var token in sqlParserTokens)
+            for (int i = 0; i < sqlStatementList.Statements.Count; i++)
             {
-                if (hasDeclarationSection && endOfParameterDeclarationMarkerFound == false)
+                if (sqlStatementList.Statements[i] is DeclareVariableStatement variableStatement)
                 {
-                    if (token.TokenType == TSqlTokenType.SingleLineComment && token.Text == options.EndOfParameterDeclarationMarker)
+                    foreach (var declaration in variableStatement.Declarations)
                     {
-                        endOfParameterDeclarationMarkerFound = true;
-                        continue;
+                        var name = declaration.VariableName.Value;
+                        var type = string.Empty;
+                        for ( var j = declaration.DataType.FirstTokenIndex; j <= declaration.DataType.LastTokenIndex; j++)
+                        {
+                            type += declaration.DataType.ScriptTokenStream[j].Text;
+                        }
+                        parameterDeclarationList.Add((name, type));
                     }
-
-                    if (token.TokenType == TSqlTokenType.Variable)
-                    {
-                        foundParameterDeclaration = token.Text;
-                        declaredParameters.Add(foundParameterDeclaration, string.Empty);
-                        continue;
-                    }
-
-                    if (token.TokenType == TSqlTokenType.Identifier && !string.IsNullOrEmpty(foundParameterDeclaration))
-                    {
-                        declaredParameters[foundParameterDeclaration] = token.Text;
-                        foundParameterDeclaration = string.Empty;
-                    }
+                    continue;
                 }
-                else
+
+                if (sqlStatementList.Statements[i] is DeclareTableVariableStatement tableVariableStatement)
                 {
-                    if (token.TokenType == TSqlTokenType.SingleLineComment)
-                    {
-                        continue;
-                    }
-                    
-                    if (token.TokenType == TSqlTokenType.MultilineComment)
-                    {
-                        continue;
-                    }
-                    
-                    if (token.TokenType == TSqlTokenType.WhiteSpace)
-                    {
-                        if (sqlCodeBuilder.Length > 0)
-                        {
-                            whiteSpaceBuffer.Append(token.Text);
-                        }
-                        continue;
-                    }
+                    var name = tableVariableStatement.Body.VariableName.Value;
+                    parameterDeclarationList.Add((name, null));
+                }
 
-                    if (token.TokenType == TSqlTokenType.EndOfFile)
-                    {
-                        continue;
-                    }
+                for (int j = sqlStatementList.Statements[i].FirstTokenIndex; j <= sqlStatementList.Statements[i].LastTokenIndex; j++)
+                {
+                    sqlCodeBuilder.Append(sqlStatementList.Statements[i].ScriptTokenStream[j].Text);
+                }
 
-                    if (token.TokenType == TSqlTokenType.Variable)
-                    {
-                        if (!declaredParameters.ContainsKey(token.Text))
-                        {
-                            await outputPane.WriteLineAsync($"\tVariable {token.Text} is used in the query, but it is not defined in the 'Parameter Declarat");
-                            return;
-                        }
-                    }
-
-                    if (whiteSpaceBuffer.Length > 0)
-                    {
-                        sqlCodeBuilder.Append(whiteSpaceBuffer.ToString());
-                        whiteSpaceBuffer.Clear();
-                    }
-
-                    sqlCodeBuilder.Append(token.Text);
+                if ((i + 1)  < sqlStatementList.Statements.Count)
+                {
+                    sqlCodeBuilder.AppendLine();
+                    sqlCodeBuilder.AppendLine();
                 }
             }
 
-            var sqlCode = sqlCodeBuilder.ToString();
-            if (string.IsNullOrWhiteSpace(sqlCode))
+            if (sqlCodeBuilder.Length <= 0)
             {
                 await outputPane.WriteLineAsync("\tCode could not be generated due to no sql code found.");
                 return;
             }
+
+            var sqlCode = sqlCodeBuilder.ToString();
 
             List<SpDescribeFirstResultSetResult> queryMetaData;
             try
@@ -177,19 +143,20 @@ namespace SqlQueryTools.FileHandlers
                     {
                         var queryBuilder = new StringBuilder();
                         queryBuilder.AppendLine($"DECLARE @sql NVARCHAR(MAX) = '{sqlCode.Replace("'", "''")}';");
-                        queryBuilder.AppendLine($"DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", declaredParameters.Select(x => $"{x.Key} {x.Value}"))}';");
+                        queryBuilder.AppendLine($"DECLARE @params NVARCHAR(MAX) = '{string.Join(", ", parameterDeclarationList.Where(x => x.Type != null).Select(x => $"{x.Name} {x.Type}"))}';");
                         queryBuilder.AppendLine("EXEC sp_describe_first_result_set @sql, @params;");
                         queryMetaData = conn.Query<SpDescribeFirstResultSetResult>(queryBuilder.ToString()).ToList();
                     }
                     catch (SqlException ex)
                     {
                         await outputPane.WriteLineAsync("\tCode could not be generated due to the following sql parse errors:");
-
+                        var counter = 0;
                         foreach (SqlError sqlError in ex.Errors)
                         {
                             if (sqlError.Number == 11529 || sqlError.Number == 11501) continue;
 
-                            await outputPane.WriteLineAsync($"\t\t{sqlError.Message}");
+                            counter++;
+                            await outputPane.WriteLineAsync($"\t\t{counter}.) {sqlError.Message}");
                         }
                         return;
                     }
@@ -238,7 +205,7 @@ namespace SqlQueryTools.FileHandlers
             var generateParameterNames = await inputPhysicalFile.GetGenerateParameterNamesAsync(options.GenerateParameterNames);
             if (generateParameterNames)
             {
-                foreach (var name in declaredParameters.Keys)
+                foreach (var name in parameterDeclarationList.Where(x => x.Type != null).Select(x => x.Name))
                 {
                     contentBuilder.AppendLine();
                     contentBuilder.AppendLine($"\t\tpublic const string {name} = @\"{name}\";");
